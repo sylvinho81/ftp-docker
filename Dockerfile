@@ -4,9 +4,13 @@ ARG USER
 ARG PASS
 
 
-RUN yum -y install openssl vsftpd && rm -rf /var/cache/yum/*
+RUN yum -y install openssl vsftpd firewalld && rm -rf /var/cache/yum/*
 
 RUN useradd -ms /bin/bash $USER && echo $USER:$PASS | chpasswd
+
+RUN firewall-cmd --zone=public --add-port=990/tcp --permanent
+RUN firewall-cmd --reload
+
 
 COPY vsftp.conf /etc/vsftp/vsftp.conf
 COPY vsftp_ftps.conf /etc/vsftp/vsftp_ftps.conf
